@@ -15,8 +15,8 @@ function useFetch<T>(
     const fetchData = async () => {
       try {
         setIsLoading(true)
-        let response = await fetch(url)
-        let result = await response.json()
+        const response = await fetch(url)
+        const result = await response.json()
         if (!response.ok) throw new Error(result.body || response.statusText)
         setData(result)
         setIsLoading(false)

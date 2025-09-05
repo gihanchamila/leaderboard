@@ -11,5 +11,5 @@ export interface User {
   commitCount: number
   changeScore: number
   overallScore: number
-  [key: string]: any
+  [key: string]: string | number | string[]
 }

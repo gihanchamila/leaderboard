@@ -1,6 +1,7 @@
 import { FileData, User } from "@/types/user.js"
 import { commitCategories } from "./commit-categories"
 import { calculateChangeScore, calculateOverallScore } from "./scoring"
+import type { Endpoints } from "@octokit/types"
 
 function createUser(author: { name: string; avatar_url: string; html_url: string }): User {
   const user: User = {
@@ -21,19 +22,26 @@ function createUser(author: { name: string; avatar_url: string; html_url: string
 
 const ignoreFiles = ["package.lock.json"]
 
-export const analyseCommits = (commits: any[]): User[] => {
+export const analyseCommits = (
+  commits: Endpoints["GET /repos/{owner}/{repo}/commits"]["response"]["data"],
+): User[] => {
   const results: User[] = []
 
   for (const commit of commits) {
     if (!commit.commit) continue
     const author = commit.author || commit.commit.author || commit.committer
-    const authorName = author.login || author.name
-    author.name = authorName
+    if (author === null) continue
+    const authorName = "login" in author ? author.login : author.name
+    if (!authorName) continue
 
     let user = results.find((u) => u.name === authorName)
 
     if (!user) {
-      user = createUser(author)
+      user = createUser({
+        name: authorName,
+        avatar_url: "avatar_url" in author ? author.avatar_url : "",
+        html_url: "html_url" in author ? author.html_url : "",
+      })
       results.push(user)
     }
 
@@ -42,7 +50,7 @@ export const analyseCommits = (commits: any[]): User[] => {
 
     let changeScore = 0
 
-    for (let file of commitFiles) {
+    for (const file of commitFiles) {
       if (ignoreFiles.includes(file.filename)) continue
       changeScore += calculateChangeScore(file.additions, file.deletions)
     }
@@ -56,8 +64,8 @@ export const analyseCommits = (commits: any[]): User[] => {
 
     for (const category of commitCategories) {
       if (category.pattern.test(commitMsg)) {
-        user[category.countField] += 1
-        user[category.listField].push(commitMsg)
+        ;(user[category.countField] as number)++
+        ;(user[category.listField] as string[]).push(commitMsg)
         break
       }
     }

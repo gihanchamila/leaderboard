@@ -33,10 +33,10 @@ export default function Home() {
   }, [lastUpdated, setTimeAgo])
 
   useEffect(() => {
-    setRefreshRatelimit(!refreshRatelimit)
-    setRefreshLastUpdated(!lastUpdated)
+    setRefreshRatelimit((prev) => !prev)
+    setRefreshLastUpdated((prev) => !prev)
     setTimeAgo(relativeTime(lastUpdated))
-  }, [isLeaderboardLoading])
+  }, [isLeaderboardLoading, lastUpdated])
 
   return (
     <main className="bg-gray-50 text-gray-800 min-h-screen font-sans">
@@ -122,17 +122,28 @@ export default function Home() {
           rows={leaderboard.map((user, index) => [
             index + 1,
             <a
-              href={user.htmlUrl}
+              key={`link-${index}`}
+              href={user.htmlUrl as string}
               target="_blank"
               rel="noopener noreferrer"
               className="flex gap-4 items-center pointer text-indigo-600 hover:underline font-medium"
             >
-              <img src={user.avatarUrl} className="w-10 h-auto rounded-full" />
+              <img
+                src={(user.avatarUrl || null) as string}
+                className="w-10 h-auto rounded-full"
+                alt={user.name}
+              />
               <div>{user.name}</div>
             </a>,
-            <div className="text-right">{user.commits}</div>,
-            <div className="text-right">{user.changeScore.toFixed(2)}</div>,
-            <div className="text-right">{user.overallScore.toFixed(2)}</div>,
+            <div className="text-right" key={`commits-${index}`}>
+              {user.commits}
+            </div>,
+            <div className="text-right" key={`change-${index}`}>
+              {user.changeScore.toFixed(2)}
+            </div>,
+            <div className="text-right" key={`overall-${index}`}>
+              {user.overallScore.toFixed(2)}
+            </div>,
           ])}
         />
       </section>
