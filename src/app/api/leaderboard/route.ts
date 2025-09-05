@@ -11,9 +11,11 @@ export async function GET() {
 
   leaders = (leaders as User[]).map((user) => ({
     name: user.name,
+    avatarUrl: user.avatarUrl,
+    htmlUrl: user.htmlUrl,
     commits: user.commitCount,
     changeScore: user.changeScore,
     overallScore: user.overallScore,
   }))
-  return Response.json({ leaders })
+  return Response.json(leaders)
 }

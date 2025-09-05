@@ -6,7 +6,7 @@ function createUser(author: { name: string; avatar_url: string; html_url: string
   const user: User = {
     name: author.name,
     avatarUrl: author.avatar_url,
-    htmlurl: author.html_url,
+    htmlUrl: author.html_url,
     commits: [],
     commitCount: 0,
     changeScore: 0,

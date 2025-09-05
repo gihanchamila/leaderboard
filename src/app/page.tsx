@@ -1,7 +1,43 @@
+"use client"
+
 import Table from "@/components/Table"
-import data from "@/temp.json"
+import useFetch from "@/hooks/useFetch"
+import RateLimit from "@/types/ratelimit"
+import { User } from "@/types/user"
+import { relativeTime } from "@/utils/relative-time"
+import { useEffect, useState } from "react"
 
 export default function Home() {
+  const [refreshRatelimit, setRefreshRatelimit] = useState(false)
+  const [refreshLastUpdated, setRefreshLastUpdated] = useState(false)
+
+  const [leaderboard, , isLeaderboardLoading] = useFetch<User[]>(
+    "/api/leaderboard",
+    [] as User[],
+    false,
+  )
+  const [ratelimit] = useFetch<RateLimit>("/api/leaderboard/ratelimit", {}, refreshRatelimit)
+  const [lastUpdated, , isLastUpdatedLoading] = useFetch<number>(
+    "/api/leaderboard/last-update",
+    0,
+    refreshLastUpdated,
+  )
+  const [timeAgo, setTimeAgo] = useState(relativeTime(lastUpdated))
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeAgo(relativeTime(lastUpdated))
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [lastUpdated, setTimeAgo])
+
+  useEffect(() => {
+    setRefreshRatelimit(!refreshRatelimit)
+    setRefreshLastUpdated(!lastUpdated)
+    setTimeAgo(relativeTime(lastUpdated))
+  }, [isLeaderboardLoading])
+
   return (
     <main className="bg-gray-50 text-gray-800 min-h-screen font-sans">
       <header className="bg-white sticky top-0 z-50 flex items-center gap-4 px-6 py-4 shadow-sm border-b border-gray-200">
@@ -61,11 +97,20 @@ export default function Home() {
       </section>
 
       <section id="ratelimit" className="m-auto max-w-5xl text-xs text-gray-400 px-6 pt-4">
-        <div>API usage: 500 / 2000</div>
+        <div>
+          API usage:{" "}
+          {isLastUpdatedLoading ? (
+            "loading..."
+          ) : (
+            <>
+              {ratelimit.used} / {ratelimit.limit}
+            </>
+          )}
+        </div>
         <div>
           Last updated{" "}
-          <abbr title="2025-01-01" className="italic">
-            3 hours ago
+          <abbr title={new Date(lastUpdated).toLocaleString()} className="italic">
+            {timeAgo}
           </abbr>
         </div>
       </section>
@@ -73,10 +118,11 @@ export default function Home() {
       <section id="leaderboard" className="m-auto max-w-5xl px-6 py-4">
         <Table
           headers={["Rank", "Contributor", "Commits", "Change score", "Overall score"]}
-          rows={data.commits.map((user, index) => [
+          isLoading={isLeaderboardLoading}
+          rows={leaderboard.map((user, index) => [
             index + 1,
             <a
-              href={user.htmlurl}
+              href={user.htmlUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex gap-4 items-center pointer text-indigo-600 hover:underline font-medium"
@@ -84,7 +130,7 @@ export default function Home() {
               <img src={user.avatarUrl} className="w-10 h-auto rounded-full" />
               <div>{user.name}</div>
             </a>,
-            <div className="text-right">{user.commits.length}</div>,
+            <div className="text-right">{user.commits}</div>,
             <div className="text-right">{user.changeScore.toFixed(2)}</div>,
             <div className="text-right">{user.overallScore.toFixed(2)}</div>,
           ])}
