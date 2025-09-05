@@ -1,25 +1,19 @@
-"use server"
+import { redis } from "@/lib/upstash"
+import { updateLeaderboard } from "./update/route"
+import { User } from "@/types/user"
 
-import { analyseCommits } from "@/utils/analyse-commits"
-import { GitHubAPI } from "@/utils/github-api"
+export async function GET() {
+  let leaders = await redis.get("leaders")
+  if (!leaders) await updateLeaderboard()
+  // fetch again
+  leaders = await redis.get("leaders")
+  if (!leaders) return Response.json({ body: "Cannot fetch leaderboard now" }, { status: 503 })
 
-export async function GET(request: Request) {
-  const { GITHUB_OWNER, GITHUB_TOKEN } = process.env
-  if (!GITHUB_OWNER || !GITHUB_TOKEN) throw new Error("Something went wrong")
-  const client = new GitHubAPI(GITHUB_TOKEN, GITHUB_OWNER)
-
-  const repos = await client.getOrgRepos()
-  let commits: any[] = []
-  for (let repo of repos) {
-    try {
-      const repoCommits = await client.getCommits(repo)
-      commits = [...commits, ...repoCommits]
-    } catch (err) {
-      // ignore
-    }
-  }
-
-  const ratelimit = await client.getRateLimit()
-  const analysedCommits = analyseCommits(commits).sort((a, b) => b.overallScore - a.overallScore)
-  return Response.json({ ratelimit, commits: analysedCommits })
+  leaders = (leaders as User[]).map((user) => ({
+    name: user.name,
+    commits: user.commitCount,
+    changeScore: user.changeScore,
+    overallScore: user.overallScore,
+  }))
+  return Response.json({ leaders })
 }
