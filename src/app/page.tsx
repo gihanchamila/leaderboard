@@ -1,83 +1,95 @@
-import Image from "next/image"
+import Table from "@/components/Table"
+import data from "@/temp.json"
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">Save and see your changes instantly.</li>
-        </ol>
+    <main className="bg-gray-50 text-gray-800 min-h-screen font-sans">
+      <header className="bg-white sticky top-0 z-50 flex items-center gap-4 px-6 py-4 shadow-sm border-b border-gray-200">
+        <img src="/logo.png" alt="SLIIT Mozilla Logo" className="w-16 h-auto" />
+        <h1 className="text-xl font-semibold text-gray-900">SLIIT Mozilla GitHub Leaderboard</h1>
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+      <section id="information" className="max-w-5xl m-auto px-6 pt-8">
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">Top Contributors</h3>
+        <p className="mb-2">
+          Here’s a spotlight on the most active contributors to the{" "}
+          <strong className="text-indigo-600">Mozilla Campus Club of SLIIT</strong>.
+        </p>
+        <p className="mb-6">
+          Want to be featured? Contribute to our{" "}
           <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href="https://github.com/Mozilla-Campus-Club-of-SLIIT/"
+            className="text-indigo-600 hover:underline font-medium"
+          >
+            Github organization
+          </a>{" "}
+          and climb the leaderboard.
+        </p>
+
+        <h4 className="text-lg font-semibold text-gray-800 mb-2">How Points Are Calculated</h4>
+
+        <pre className="bg-white border border-gray-300 rounded p-4 text-sm font-mono text-gray-800 overflow-x-auto">
+          <code>
+            <span className="text-purple-600">score</span> = commitCount *{" "}
+            <span className="text-green-600">5</span> + <span className="text-pink-600">log10</span>
+            (changeScore + <span className="text-green-600">1</span>) *{" "}
+            <span className="text-green-600">20</span>
+          </code>
+        </pre>
+
+        <div className="text-gray-700 mb-2">Where:</div>
+
+        <pre className="bg-white border border-gray-300 rounded p-4 text-sm font-mono text-gray-800 overflow-x-auto">
+          <code>
+            <span className="text-purple-600">changeScore</span> = additionsPerFile +
+            deletionsPerFile * <span className="text-green-600">0.25</span>
+          </code>
+        </pre>
+
+        <p>
+          Learn more{" "}
+          <a
+            href="https://github.com/Mozilla-Campus-Club-of-SLIIT/leaderboard/blob/main/src/utils/scoring.ts"
+            className="text-indigo-600 hover:underline font-medium"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+            on GitHub
           </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          .
+        </p>
+      </section>
+
+      <section id="ratelimit" className="m-auto max-w-5xl text-xs text-gray-400 px-6 pt-4">
+        <div>API usage: 500 / 2000</div>
+        <div>
+          Last updated{" "}
+          <abbr title="2025-01-01" className="italic">
+            3 hours ago
+          </abbr>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/file.svg" alt="File icon" width={16} height={16} />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/window.svg" alt="Window icon" width={16} height={16} />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      <section id="leaderboard" className="m-auto max-w-5xl px-6 py-4">
+        <Table
+          headers={["Rank", "Contributor", "Commits", "Change score", "Overall score"]}
+          rows={data.commits.map((user, index) => [
+            index + 1,
+            <a
+              href={user.htmlurl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex gap-4 items-center pointer text-indigo-600 hover:underline font-medium"
+            >
+              <img src={user.avatarUrl} className="w-10 h-auto rounded-full" />
+              <div>{user.name}</div>
+            </a>,
+            <div className="text-right">{user.commits.length}</div>,
+            <div className="text-right">{user.changeScore.toFixed(2)}</div>,
+            <div className="text-right">{user.overallScore.toFixed(2)}</div>,
+          ])}
+        />
+      </section>
+    </main>
   )
 }
