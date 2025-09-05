@@ -1,6 +1,6 @@
 {
   "crons": [{
     "path": "/api/leaderboard/update",
-    "schedule": "0 */12 * * *"
+    "schedule": "0 0 * * *"
   }]
 }
