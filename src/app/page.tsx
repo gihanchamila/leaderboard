@@ -5,6 +5,7 @@ import useFetch from "@/hooks/useFetch"
 import RateLimit from "@/types/ratelimit"
 import { User } from "@/types/user"
 import { relativeTime } from "@/utils/relative-time"
+import { CHANGESCORE_MULTIPLIER, COMMIT_MULTIPLIER } from "@/utils/scoring"
 import { useEffect, useState } from "react"
 
 export default function Home() {
@@ -64,26 +65,22 @@ export default function Home() {
 
         <h4 className="text-lg font-semibold text-gray-800 mb-2">How Points Are Calculated</h4>
 
-        <pre className="bg-white border border-gray-300 rounded p-4 text-sm font-mono text-gray-800 overflow-x-auto">
+        <pre className="bg-white border border-gray-300 rounded p-4 mb-4 text-sm font-mono text-gray-800 overflow-x-auto">
           <code>
             <span className="text-purple-600">score</span> = commitCount *{" "}
-            <span className="text-green-600">5</span> + <span className="text-pink-600">log10</span>
+            <span className="text-green-600">{COMMIT_MULTIPLIER}</span> +{" "}
+            <span className="text-pink-600">log10</span>
             (changeScore + <span className="text-green-600">1</span>) *{" "}
-            <span className="text-green-600">20</span>
+            <span className="text-green-600">{CHANGESCORE_MULTIPLIER}</span>
           </code>
         </pre>
 
-        <div className="text-gray-700 mb-2">Where:</div>
-
-        <pre className="bg-white border border-gray-300 rounded p-4 text-sm font-mono text-gray-800 overflow-x-auto">
-          <code>
-            <span className="text-purple-600">changeScore</span> = additionsPerFile +
-            deletionsPerFile * <span className="text-green-600">0.25</span>
-          </code>
-        </pre>
+        <div className="text-gray-700 mb-2">
+          Where <b>change score</b> is the quality of the changes made.
+        </div>
 
         <p>
-          Learn more{" "}
+          Learn more about how we calculate this{" "}
           <a
             href="https://github.com/Mozilla-Campus-Club-of-SLIIT/leaderboard/blob/main/src/utils/scoring.ts"
             className="text-indigo-600 hover:underline font-medium"

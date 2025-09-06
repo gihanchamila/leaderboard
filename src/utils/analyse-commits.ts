@@ -1,6 +1,6 @@
 import { FileData, User } from "@/types/user.js"
 import { commitCategories } from "./commit-categories"
-import { calculateChangeScore, calculateOverallScore } from "./scoring"
+import { calculateChangeScore, calculateOverallScore, ignoreFilesPattern } from "./scoring"
 import type { Endpoints } from "@octokit/types"
 
 function createUser(author: { name: string; avatar_url: string; html_url: string }): User {
@@ -19,8 +19,6 @@ function createUser(author: { name: string; avatar_url: string; html_url: string
   }
   return user as User
 }
-
-const ignoreFiles = ["package.lock.json"]
 
 export const analyseCommits = (
   commits: Endpoints["GET /repos/{owner}/{repo}/commits"]["response"]["data"],
@@ -51,7 +49,7 @@ export const analyseCommits = (
     let changeScore = 0
 
     for (const file of commitFiles) {
-      if (ignoreFiles.includes(file.filename)) continue
+      if (ignoreFilesPattern.test(file.filename)) continue
       changeScore += calculateChangeScore(file.additions, file.deletions)
     }
 
