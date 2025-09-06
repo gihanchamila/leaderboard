@@ -24,7 +24,11 @@ export async function updateLeaderboard() {
   const leaders = analyseCommits(commits).sort((a, b) => b.overallScore - a.overallScore)
 
   await redis.set("lastUpdate", Date.now())
-  await redis.set("leaders", leaders)
+  await redis.set(
+    "leaders",
+    leaders,
+    { ex: 6 * 60 * 60 }, // expire in 6 hours
+  )
 }
 
 export async function POST() {
