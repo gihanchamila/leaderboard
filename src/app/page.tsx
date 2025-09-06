@@ -113,10 +113,13 @@ export default function Home() {
       </section>
 
       <section id="leaderboard" className="m-auto max-w-5xl px-6 py-4">
-        <Table
+        <Table<User>
           headers={["Rank", "Contributor", "Commits", "Change score", "Overall score"]}
+          sortColumns={["Commits", "Change score", "Overall score"]}
+          defaultSortingColumn="Overall score"
+          defaultSortingMethod="descending"
           isLoading={isLeaderboardLoading}
-          rows={leaderboard.map((user, index) => [
+          renderFunction={(user: User, index: number) => [
             index + 1,
             <a
               key={`link-${index}`}
@@ -141,7 +144,13 @@ export default function Home() {
             <div className="text-right" key={`overall-${index}`}>
               {user.overallScore.toFixed(2)}
             </div>,
-          ])}
+          ]}
+          rows={leaderboard}
+          columnToKeyMap={{
+            ["Commits"]: "commits",
+            ["Change score"]: "changeScore",
+            ["Overall score"]: "overallScore",
+          }}
         />
       </section>
     </main>

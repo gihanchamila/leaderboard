@@ -52,7 +52,6 @@ export const ignoreFilesPattern = new RegExp(
   "(" + ignoreFiles.map((r) => r.source).join("|") + ")",
   "i",
 )
-console.log(ignoreFilesPattern)
 
 export const calculateChangeScore = (additions: number, deletions: number) =>
   (additions < LOW_EFFORT_CHANGE_THRESHOLD ? LOW_EFFORT_CHANGE_PENALTY : additions) *
