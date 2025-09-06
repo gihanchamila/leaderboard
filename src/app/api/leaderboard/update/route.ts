@@ -21,11 +21,9 @@ export async function updateLeaderboard() {
     }
   }
 
-  const ratelimit = await client.getRateLimit()
   const leaders = analyseCommits(commits).sort((a, b) => b.overallScore - a.overallScore)
 
   await redis.set("lastUpdate", Date.now())
-  await redis.set("ratelimit", ratelimit)
   await redis.set("leaders", leaders)
 }
 
