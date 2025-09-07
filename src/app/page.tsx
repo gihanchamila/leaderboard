@@ -7,6 +7,8 @@ import { User } from "@/types/user"
 import { relativeTime } from "@/utils/relative-time"
 import { CHANGESCORE_MULTIPLIER, COMMIT_MULTIPLIER } from "@/utils/scoring"
 import { useEffect, useState } from "react"
+import moxyLeaderboardImage from "@/assets/images/moxy-leaderboard.png"
+import Image from "next/image"
 
 export default function Home() {
   const [refreshRatelimit, setRefreshRatelimit] = useState(false)
@@ -47,50 +49,58 @@ export default function Home() {
       </header>
 
       <section id="information" className="max-w-5xl m-auto px-6 pt-8">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Top Contributors</h3>
-        <p className="mb-2">
-          Here’s a spotlight on the most active contributors to the{" "}
-          <strong className="text-indigo-600">Mozilla Campus Club of SLIIT</strong>.
-        </p>
-        <p className="mb-6">
-          Want to be featured? Contribute to our{" "}
-          <a
-            href="https://github.com/Mozilla-Campus-Club-of-SLIIT/"
-            className="text-indigo-600 hover:underline font-medium"
-          >
-            Github organization
-          </a>{" "}
-          and climb the leaderboard.
-        </p>
-
-        <h4 className="text-lg font-semibold text-gray-800 mb-2">How Points Are Calculated</h4>
-
-        <pre className="bg-white border border-gray-300 rounded p-4 mb-4 text-sm font-mono text-gray-800 overflow-x-auto">
-          <code>
-            <span className="text-purple-600">score</span> = commitCount *{" "}
-            <span className="text-green-600">{COMMIT_MULTIPLIER}</span> +{" "}
-            <span className="text-pink-600">log10</span>
-            (changeScore + <span className="text-green-600">1</span>) *{" "}
-            <span className="text-green-600">{CHANGESCORE_MULTIPLIER}</span>
-          </code>
-        </pre>
-
-        <div className="text-gray-700 mb-2">
-          Where <b>change score</b> is the quality of the changes made.
+        <div className="flex flex-col items-end justify-between md:flex-row gap-6">
+          <div className="w-full md:w-1/2">
+            {" "}
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Top Contributors</h3>
+            <p className="mb-2">
+              Here’s a spotlight on the most active contributors to the{" "}
+              <strong className="text-indigo-600">Mozilla Campus Club of SLIIT</strong>.
+            </p>
+            <p className="mb-6">
+              Want to be featured? Contribute to our{" "}
+              <a
+                href="https://github.com/Mozilla-Campus-Club-of-SLIIT/"
+                className="text-indigo-600 hover:underline font-medium"
+              >
+                Github organization
+              </a>{" "}
+              and climb the leaderboard.
+            </p>
+            <h4 className="text-lg font-semibold text-gray-800 mb-2">How Points Are Calculated</h4>
+            <pre className="bg-white border border-gray-300 rounded p-4 mb-4 text-sm font-mono text-gray-800 overflow-x-auto">
+              <code>
+                <span className="text-purple-600">score</span> = commitCount *{" "}
+                <span className="text-green-600">{COMMIT_MULTIPLIER}</span> +{" "}
+                <span className="text-pink-600">log10</span>
+                (changeScore + <span className="text-green-600">1</span>) *{" "}
+                <span className="text-green-600">{CHANGESCORE_MULTIPLIER}</span>
+              </code>
+            </pre>
+            <div className="text-gray-700 mb-2">
+              Where <b>change score</b> is the quality of the changes made.
+            </div>
+            <p>
+              Learn more about how we calculate this{" "}
+              <a
+                href="https://github.com/Mozilla-Campus-Club-of-SLIIT/leaderboard/blob/main/src/utils/scoring.ts"
+                className="text-indigo-600 hover:underline font-medium"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                on GitHub
+              </a>
+              .
+            </p>
+          </div>
+          <div className="flex-shrink-0 w-full md:w-sm">
+            <Image
+              src={moxyLeaderboardImage}
+              alt="Moxy looking at leaderboard"
+              className="w-xs h-auto"
+            />
+          </div>
         </div>
-
-        <p>
-          Learn more about how we calculate this{" "}
-          <a
-            href="https://github.com/Mozilla-Campus-Club-of-SLIIT/leaderboard/blob/main/src/utils/scoring.ts"
-            className="text-indigo-600 hover:underline font-medium"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            on GitHub
-          </a>
-          .
-        </p>
       </section>
 
       <section id="ratelimit" className="m-auto max-w-5xl text-xs text-gray-400 px-6 pt-4">
