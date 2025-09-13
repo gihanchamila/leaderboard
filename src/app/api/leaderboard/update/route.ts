@@ -35,3 +35,15 @@ export async function POST() {
   await updateLeaderboard()
   return Response.json({ success: true })
 }
+
+// for vercel cron jobs
+export async function GET(request: Request) {
+  const authHeader = request.headers.get("authorization")
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("Unauthorized", {
+      status: 401,
+    })
+  }
+  await updateLeaderboard()
+  return Response.json({ success: true })
+}
