@@ -46,6 +46,9 @@ export const ignoreFiles = [
   /\.dll$/i,
   /\.exe$/i,
   /\.out$/i,
+
+  // License
+  /LICENSE$/i,
 ]
 
 export const ignoreFilesPattern = new RegExp(
