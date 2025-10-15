@@ -1,6 +1,7 @@
 "use client"
 
 import Table from "@/components/Table"
+import Header from "@/components/Header"
 import useFetch from "@/hooks/useFetch"
 import RateLimit from "@/types/ratelimit"
 import { User } from "@/types/user"
